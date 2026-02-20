@@ -1,0 +1,60 @@
+{
+  "name": "deepadata-ddna-reader",
+  "version": "0.1.0",
+  "description": "Read-only tools for .ddna envelope inspection and structure validation",
+  "type": "module",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "bin": {
+    "ddna-reader": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/lib/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "lint": "tsc --noEmit",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ddna",
+    "deepadata",
+    "edm",
+    "emotional-data-model",
+    "inspection",
+    "validation",
+    "read-only"
+  ],
+  "author": "Deepadata",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepadata/deepadata-ddna-reader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/deepadata/deepadata-ddna-reader/issues"
+  },
+  "homepage": "https://github.com/deepadata/deepadata-ddna-reader#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
