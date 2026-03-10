@@ -98,7 +98,7 @@ A `.ddna` envelope contains three components:
   "ddna_header": {
     "ddna_version": "1.1",
     "created_at": "2026-02-19T10:00:00Z",
-    "edm_version": "0.5.0",
+    "edm_version": "0.6.0",
     "jurisdiction": "AU",
     "consent_basis": "explicit_consent",
     "exportability": "allowed",
