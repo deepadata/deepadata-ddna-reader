@@ -134,7 +134,7 @@ This is similar to SSL certificates: anyone can read a certificate, but only tru
 
 - [emotionaldatamodel.org](https://emotionaldatamodel.org) - Open specification for the Emotional Data Model
 - [deepadata.com](https://deepadata.com) - Certification authority and API for sealing and verification
-- [deepadata-edm-spec](https://github.com/deepadata/deepadata-edm-spec) - Canonical EDM schema and examples
+- [deepadata-edm-spec](https://github.com/emotional-data-model/edm-spec) - Canonical EDM schema and examples
 - [deepadata-edm-sdk](https://github.com/deepadata/deepadata-edm-sdk) - LLM-assisted EDM extraction SDK
 
 ## License
