@@ -5,13 +5,12 @@
  * Commands:
  *   inspect - Inspect a .ddna envelope structure and contents
  *   validate - Validate envelope structure against schema
+ *   verify - Verify cryptographic signature (Ed25519)
  *
  * This tool does NOT:
- *   - Verify cryptographic signatures
- *   - Seal or sign envelopes
- *   - Generate keys
- *
- * For sealing and verification, use ddna-tools.
+ *   - Seal or sign envelopes (use ddna-tools)
+ *   - Generate keys (use ddna-tools)
+ *   - Perform registry lookups (use DeepaData API)
  */
 
 import { Command } from 'commander';
@@ -21,6 +20,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { inspect, inspectJson, validateStructure } from './lib/inspect.js';
+import { verify } from './lib/verify.js';
 
 // Get package version
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -141,15 +141,106 @@ program
   });
 
 // ============================================================================
+// VERIFY COMMAND
+// ============================================================================
+
+/**
+ * CLI verify result structure for --json output
+ */
+interface CliVerifyResult {
+  verified: boolean;
+  signer_did: string | null;
+  created: string | null;
+  errors: string[];
+}
+
+program
+  .command('verify')
+  .description('Verify cryptographic signature on a .ddna envelope')
+  .argument('<input>', 'Path to .ddna envelope')
+  .option('--json', 'Output as JSON')
+  .option('--skip-timestamp', 'Skip timestamp validation (created/expires)')
+  .option('--clock-skew <ms>', 'Clock skew tolerance in milliseconds (default: 300000)', '300000')
+  .action(async (input: string, options) => {
+    try {
+      // Read envelope
+      const envelope = readJsonFile(input);
+
+      // Run verification
+      const result = await verify(envelope, {
+        skipTimestampCheck: options.skipTimestamp,
+        clockSkewMs: parseInt(options.clockSkew, 10),
+      });
+
+      // Build CLI result
+      const cliResult: CliVerifyResult = {
+        verified: result.valid,
+        signer_did: result.verificationMethod ?? null,
+        created: result.created ?? null,
+        errors: result.valid ? [] : [result.reason ?? 'Unknown error'],
+      };
+
+      if (options.json) {
+        // JSON output
+        console.log(JSON.stringify(cliResult, null, 2));
+        process.exit(result.valid ? 0 : 1);
+      } else {
+        // Human-readable output
+        if (result.valid) {
+          console.log(chalk.green('VERIFIED') + ' - Signature is valid');
+          console.log('');
+          console.log('Signer:  ' + chalk.cyan(result.verificationMethod));
+          console.log('Created: ' + result.created);
+          console.log('');
+          console.log(chalk.dim('Note: This verifies the cryptographic signature only.'));
+          console.log(chalk.dim('For registry lookup (Certified status), use the DeepaData API.'));
+          console.log(chalk.dim('Timestamp is signer-attested per W3C Data Integrity, not RFC 3161.'));
+        } else {
+          console.log(chalk.red('FAILED') + ' - Signature verification failed');
+          console.log('');
+          console.log(chalk.red('Error:'), result.reason);
+          if (result.verificationMethod) {
+            console.log('Signer:  ' + result.verificationMethod);
+          }
+          if (result.created) {
+            console.log('Created: ' + result.created);
+          }
+        }
+        process.exit(result.valid ? 0 : 1);
+      }
+    } catch (error) {
+      if (options.json) {
+        const cliResult: CliVerifyResult = {
+          verified: false,
+          signer_did: null,
+          created: null,
+          errors: [error instanceof Error ? error.message : String(error)],
+        };
+        console.log(JSON.stringify(cliResult, null, 2));
+      } else {
+        console.error(chalk.red('Error:'), error instanceof Error ? error.message : error);
+      }
+      process.exit(1);
+    }
+  });
+
+// ============================================================================
 // HELP TEXT
 // ============================================================================
 
 program.addHelpText('after', `
 ${chalk.bold('About this tool:')}
-  This is a read-only tool for inspecting .ddna envelope contents.
-  It validates structure but does NOT verify cryptographic signatures.
+  Read-only tool for inspecting and verifying .ddna envelopes.
+  - inspect: Display envelope contents
+  - validate: Check envelope structure (schema validation)
+  - verify: Verify cryptographic signature (Ed25519)
 
-${chalk.bold('For sealing and verification:')}
+${chalk.bold('Verification notes:')}
+  - did:key signatures verify offline (default)
+  - did:web signatures require the DeepaData API or custom resolver
+  - Timestamps are signer-attested (W3C Data Integrity), not RFC 3161
+
+${chalk.bold('For sealing:')}
   Use ddna-tools: ${chalk.cyan('https://github.com/emotional-data-model/ddna-tools')}
 
 ${chalk.bold('Examples:')}
@@ -157,6 +248,8 @@ ${chalk.bold('Examples:')}
   $ ddna-reader inspect envelope.ddna --json
   $ ddna-reader validate envelope.ddna
   $ ddna-reader validate envelope.ddna --strict
+  $ ddna-reader verify envelope.ddna
+  $ ddna-reader verify envelope.ddna --json
 `);
 
 // ============================================================================
