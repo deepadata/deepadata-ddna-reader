@@ -2,6 +2,8 @@
 
 Read-only parser and verifier for .ddna envelopes.
 
+**Last session:** 2026-04-22 — v0.2.0 published to npm (ADR-0020 Phase 1+2 complete, 10 conformance test vectors bundled)
+
 ## What This Repo Is
 
 A lightweight library for parsing, displaying, and verifying
@@ -87,9 +89,6 @@ These are deferred to future versions:
 - **v0.3.0 @deepadata/ddna-verify-core** - Extraction of verify.ts
   and did.ts to a shared private package consumed by both
   ddna-reader and deepadata-com to eliminate version drift.
-- **Test vectors** - DONE 2026-04-22. 10 canonical vectors in
-  edm-spec/test-vectors/ and bundled locally in test-fixtures/vectors/.
-  Conformance test suite passes all 10 vectors.
 
 ## Source of Truth
 
