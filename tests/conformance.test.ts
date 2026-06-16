@@ -1,14 +1,15 @@
 /**
  * Conformance test suite against canonical EDM test vectors
  *
- * Test vectors source: deepadata-edm-spec/test-vectors/
- * Bundled at: test-fixtures/vectors/
+ * Test vectors source: the published `edm-spec` package (test-vectors/).
+ * Resolved at runtime from node_modules — no local copy is maintained, so
+ * these tests always run against the spec version pinned in package.json.
  *
- * Per ADR-0020 and test-fixtures/vectors/README.md:
+ * Per ADR-0020 and edm-spec's docs/CONFORMANCE.md:
  * - These vectors are the canonical source of truth for verification correctness
  * - Any conforming reader must produce the documented expected results
  *
- * Reason category vocabulary (from test-fixtures/vectors/README.md lines 117-132):
+ * Reason category vocabulary (from edm-spec test-vectors/README.md):
  * - VALID: Signature verified successfully
  * - INVALID_SIGNATURE: Ed25519 signature verification failed
  * - MISSING_PROOF: Envelope has no proof block
@@ -23,13 +24,17 @@
 import { describe, test, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 import { verify } from '../src/lib/verify.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const VECTORS_DIR = join(__dirname, '..', 'test-fixtures', 'vectors');
+// Resolve the test-vectors directory from the published edm-spec package.
+// edm-spec exports "./package.json", so we locate the package root and join
+// its test-vectors/ directory. This keeps the vectors in lockstep with the
+// pinned spec version instead of maintaining a manual local copy.
+const require = createRequire(import.meta.url);
+const VECTORS_DIR = join(dirname(require.resolve('edm-spec/package.json')), 'test-vectors');
 
-// Load INDEX.json (per test-fixtures/vectors/INDEX.json structure)
+// Load INDEX.json (per edm-spec test-vectors/INDEX.json structure)
 interface VectorIndex {
   version: string;
   spec_version: string;
@@ -54,8 +59,8 @@ const index: VectorIndex = JSON.parse(
 );
 
 /**
- * Map implementation-specific error messages to canonical reason categories
- * Per test-fixtures/vectors/README.md lines 82-85:
+ * Map implementation-specific error messages to canonical reason categories.
+ * Per edm-spec test-vectors/README.md:
  * "Verify reason category matches (implementation-specific wording allowed)"
  */
 function matchesReasonCategory(reason: string | undefined, expectedCategory: string | null): boolean {
@@ -130,12 +135,12 @@ describe('Conformance Test Suite', () => {
           readFileSync(join(vectorDir, 'envelope.ddna'), 'utf-8')
         );
 
-        // Load expected.json (per test-fixtures/vectors/README.md lines 39-56)
+        // Load expected.json (per edm-spec test-vectors/README.md)
         const expected: ExpectedResult = JSON.parse(
           readFileSync(join(vectorDir, 'expected.json'), 'utf-8')
         );
 
-        // Per test-fixtures/vectors/README.md line 79:
+        // Per edm-spec test-vectors/README.md:
         // "Skip timestamp checks for deterministic test results"
         // Exception: vector 010 tests expired proof - we need timestamp check
         const skipTimestampCheck = vector.id !== '010-expired-proof';

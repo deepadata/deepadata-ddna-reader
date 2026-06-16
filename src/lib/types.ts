@@ -5,7 +5,7 @@
 
 /**
  * Retention policy for EDM artifacts
- * Aligned with EDM v0.5.0 canonical schema
+ * Aligned with EDM v0.8 canonical schema (edm-spec)
  */
 export interface RetentionPolicy {
   basis: 'user_defined' | 'legal' | 'business_need';
@@ -88,12 +88,12 @@ export interface VerifyResult {
 
 /**
  * EDM payload meta domain
- * Aligned with EDM v0.5.0 canonical schema
+ * Aligned with EDM v0.8 canonical schema (edm-spec)
  */
 export interface EdmMeta {
   /** Artifact owner identifier */
   owner_user_id?: string | null;
-  /** EDM schema version (e.g., "0.5.0") */
+  /** EDM schema version (e.g., "0.8.0") */
   version?: string;
   /** ISO 8601 creation timestamp */
   created_at?: string;
