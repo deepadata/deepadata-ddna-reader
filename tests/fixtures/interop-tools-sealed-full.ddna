@@ -1,0 +1,191 @@
+{
+  "ddna_header": {
+    "ddna_version": "1.1",
+    "created_at": "2026-07-21T14:52:31.581Z",
+    "edm_version": "0.8.3",
+    "owner_user_id": "vp-02HZ4GKWP7XTJY9QN7BN",
+    "exportability": "allowed",
+    "jurisdiction": "GDPR",
+    "payload_type": "edm.v0.6.full",
+    "consent_basis": "consent",
+    "retention_policy": {
+      "basis": "user_defined",
+      "ttl_days": null,
+      "on_expiry": "soft_delete"
+    },
+    "masking_rules": [],
+    "audit_chain": [
+      {
+        "at": "2026-07-21T14:52:31.582Z",
+        "event": "created",
+        "agent": "ddna-tools"
+      }
+    ]
+  },
+  "edm_payload": {
+    "meta": {
+      "id": "c41c7878-48f4-40f2-a7ee-9817a2a837de",
+      "version": "0.8.3",
+      "profile": "full",
+      "created_at": "2026-03-09T11:45:09.455Z",
+      "updated_at": null,
+      "locale": "en-au",
+      "owner_user_id": "vp-02HZ4GKWP7XTJY9QN7BN",
+      "parent_id": null,
+      "visibility": "private",
+      "pii_tier": "moderate",
+      "source_type": "text",
+      "source_context": "journal entry written after competition photos arrived",
+      "consent_basis": "consent",
+      "consent_scope": "personal memory archive",
+      "consent_revoked_at": null,
+      "tags": [
+        "dance",
+        "resilience",
+        "community"
+      ]
+    },
+    "core": {
+      "anchor": "physie competition",
+      "spark": "receiving competition photos",
+      "wound": "body betrayal through arthritis",
+      "fuel": "supportive women community",
+      "bridge": "dance connecting past performer to present self",
+      "echo": "feeling young on stage",
+      "narrative": "Weekend physie competition photos arrived, capturing the joy of performing despite a psoriatic arthritis diagnosis eight years ago. The supportive community of women and weekly classes keep both joints mobile and spirits high. Dancing in front of crowds resurrects the professional dancer within, defying physical limitations. What began as Jason's encouragement four years ago has become essential self-care for this working single mum."
+    },
+    "constellation": {
+      "emotion_primary": "joy",
+      "emotion_subtone": [
+        "triumphant",
+        "grateful",
+        "empowered",
+        "nostalgic"
+      ],
+      "higher_order_emotion": "self-actualization",
+      "meta_emotional_state": "empowered",
+      "interpersonal_affect": "belonging",
+      "narrative_arc": "overcoming",
+      "relational_dynamics": "community_ritual",
+      "temporal_context": "midlife",
+      "memory_type": "milestone",
+      "media_format": "photo_with_story",
+      "narrative_archetype": "hero",
+      "symbolic_anchor": "dance stage",
+      "relational_perspective": "community",
+      "temporal_rhythm": "rising",
+      "identity_thread": "dancer despite physical limitations",
+      "expressed_insight": "we all need something in our lives that we can do just for us",
+      "transformational_pivot": true,
+      "somatic_signature": "mobile joints",
+      "arc_type": "authenticity"
+    },
+    "milky_way": {
+      "event_type": "competition",
+      "location_context": "physie competition venue",
+      "associated_people": [
+        "Jason",
+        "dance sisters"
+      ],
+      "visibility_context": "shared_publicly",
+      "tone_shift": "struggle to triumph"
+    },
+    "gravity": {
+      "emotional_weight": 0.8,
+      "emotional_density": "high",
+      "valence": "positive",
+      "viscosity": "high",
+      "gravity_type": "identity restoration",
+      "tether_type": "identity",
+      "recall_triggers": [
+        "physie photos",
+        "stage lights",
+        "supportive cheers"
+      ],
+      "retrieval_keys": [
+        "physie competition",
+        "arthritis warrior",
+        "dance community",
+        "stage performance"
+      ],
+      "nearby_themes": [
+        "chronic illness",
+        "single motherhood",
+        "self-care",
+        "community support"
+      ],
+      "recurrence_pattern": "cyclical",
+      "strength_score": 0.9,
+      "temporal_decay": "slow",
+      "resilience_markers": [
+        "acceptance",
+        "community",
+        "adaptation"
+      ],
+      "adaptation_trajectory": "improving"
+    },
+    "impulse": {
+      "primary_energy": "empowerment",
+      "drive_state": "share",
+      "motivational_orientation": "meaning",
+      "temporal_focus": "present",
+      "directionality": "outward",
+      "social_visibility": "collective",
+      "urgency": "elevated",
+      "risk_posture": "bold",
+      "agency_level": "high",
+      "regulation_state": "regulated",
+      "attachment_style": "secure",
+      "coping_style": "seek_support"
+    },
+    "governance": {
+      "jurisdiction": "GDPR",
+      "retention_policy": {
+        "basis": "user_defined",
+        "ttl_days": null,
+        "on_expiry": "soft_delete"
+      },
+      "subject_rights": {
+        "portable": true,
+        "erasable": true,
+        "explainable": false
+      },
+      "exportability": "allowed",
+      "k_anonymity": {
+        "k": null,
+        "groups": []
+      },
+      "policy_labels": [
+        "personal",
+        "health-adjacent"
+      ],
+      "masking_rules": []
+    },
+    "telemetry": {
+      "entry_confidence": 0.93,
+      "extraction_model": "claude-sonnet-4-6",
+      "extraction_provider": "anthropic",
+      "extraction_notes": "Full-profile extraction; interpretive fields grounded in stated content, no inference applied."
+    },
+    "system": {
+      "embeddings": [],
+      "indices": {
+        "waypoint_ids": []
+      }
+    },
+    "crosswalks": {
+      "plutchik_primary": "joy",
+      "geneva_emotion_wheel": "Pride / Elation",
+      "DSM5_specifiers": null,
+      "ISO_27557_labels": null
+    }
+  },
+  "proof": {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "eddsa-jcs-2022",
+    "created": "2026-07-21T14:52:31.582Z",
+    "verificationMethod": "did:key:z6MkgRKr5s6sz7LY1yq2PpjuiAfod5k7Fr9gzc5d5tq7aoZw",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z4m3WcCWz4obwSKBKvL1aZJk6E7PnoCaS6ciPzDzcUXnxq6uNaPJQH6UKW1aPiDJYMfo1xfsdFNtayPoYXCu3XJxe"
+  }
+}
