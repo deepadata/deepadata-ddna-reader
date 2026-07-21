@@ -4,7 +4,8 @@
  * This module provides read-only inspection of .ddna envelopes.
  * It validates structure but does NOT verify cryptographic signatures.
  *
- * For sealing and verification, use ddna-tools.
+ * For signature verification, use this package's verify()/verifySync()
+ * (open verification per ADR-0020). For sealing, use ddna-tools.
  */
 
 import type {
@@ -174,7 +175,7 @@ function truncateDid(did: string, maxLength = 50): string {
  * Inspect a .ddna envelope and return structured result
  *
  * This validates structure only - it does NOT verify cryptographic signatures.
- * For signature verification, use ddna-tools.
+ * For signature verification, use verify() or verifySync().
  *
  * @param envelope - The envelope to inspect
  * @returns Inspection result with all relevant metadata
@@ -222,8 +223,8 @@ export function inspectEnvelope(envelope: object): InspectionResult {
 /**
  * Generate human-readable inspection output
  *
- * Note: This tool reads envelope contents but does NOT verify cryptographic signatures.
- * For sealing and verification, use ddna-tools.
+ * Note: This reads envelope contents but does NOT verify cryptographic signatures.
+ * For signature verification, use verify() or the `ddna-reader verify` command.
  *
  * @param envelope - The envelope to inspect
  * @returns Formatted string for terminal display
@@ -276,8 +277,8 @@ Expected structure: { ddna_header, edm_payload, proof }`;
 
   // Note about signature verification
   lines.push('');
-  lines.push('Note: For signature verification, use ddna-tools.');
-  lines.push('      https://github.com/emotional-data-model/ddna-tools');
+  lines.push('Note: Inspection does not verify the signature.');
+  lines.push('      Run: ddna-reader verify <file>');
 
   return lines.join('\n');
 }
@@ -300,7 +301,7 @@ export function inspectJson(envelope: object): object {
       structureValid: result.structureValid,
       error: result.error,
       warnings: validation.warnings.length > 0 ? validation.warnings : undefined,
-      note: 'For signature verification, use ddna-tools',
+      note: 'Inspection does not verify the signature. Use verify() or `ddna-reader verify`.',
     },
     envelope: {
       version: result.version,
