@@ -2,7 +2,11 @@
 
 Read-only parser and verifier for .ddna envelopes.
 
-**Last session:** 2026-04-22 — v0.2.0 published to npm (ADR-0020 Phase 1+2 complete, 10 conformance test vectors bundled)
+**Last session:** 2026-07-22 — version-truth sweep (feat/version-truth-083):
+edm-spec dependency repointed to the local 0.8.3 release cut, conformance
+metadata assertions derived from the installed spec, tools-sealed 0.8.3
+interop fixture + offline-verify regression test added, stale
+"use ddna-tools for verification" notes corrected.
 
 ## What This Repo Is
 
@@ -13,6 +17,28 @@ parsing, field extraction, and Ed25519 signature verification.
 - **Current version:** v0.2.0
 - **License:** MIT (open source)
 - **Remote:** github.com/emotional-data-model/ddna-reader
+
+## EDM Schema Source of Truth (ADR-0030)
+
+The published **`edm-spec`** package is canonical. This repo derives all
+spec truth from the INSTALLED package (currently v0.8.3): conformance
+test vectors resolve from `node_modules/edm-spec/test-vectors/`, and the
+current-version assertion in tests reads `edm-spec/package.json` at run
+time. Nothing in `src/` hardcodes an EDM version, field count, or
+vocabulary — the reader is deliberately **version-agnostic**: it records
+and displays an envelope's `edm_version` but does not gate on it, so
+envelopes sealed under any historical EDM version remain inspectable
+and verifiable. Do not narrow acceptance to only-current.
+
+Spec facts as of v0.8.3 (for orientation only — never restate in code):
+- Full profile = **91 fields**
+- `narrative_archetype` = **12 canonical identity archetypes**
+  (hero, caregiver, seeker, sage, lover, outlaw, innocent, magician,
+  creator, everyman, jester, ruler) — no `orphan`, no `mentor`
+
+**Pending:** `devDependencies["edm-spec"]` is `file:../edm-spec`
+(local release/v0.8.3 clone) because 0.8.3 is not yet on npm. Flip to
+the published `^0.8.3` at spec publish time (TODO-to-flip-at-publish).
 
 ## Role in the DeepaData System
 
@@ -92,4 +118,8 @@ These are deferred to future versions:
 
 ## Source of Truth
 
-→ **See `deepadata-com/planning/CLAUDE_PROJECT.md`**
+- **Schema:** the installed `edm-spec` package (ADR-0030) — see above.
+- **Project state:** `deepadata-com/planning/STATE.md` (read first),
+  then `planning/TODO-PROGRAM.md` and the newest file in
+  `planning/session_handoffs/`. (`planning/CLAUDE_PROJECT.md` is
+  superseded as of 2026-07-21, retained as historical record.)
