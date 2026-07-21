@@ -205,7 +205,7 @@ A `.ddna` envelope contains three components:
   "ddna_header": {
     "ddna_version": "1.1",
     "created_at": "2026-02-19T10:00:00Z",
-    "edm_version": "0.8.0",
+    "edm_version": "0.8.3",
     "jurisdiction": "GDPR",
     "consent_basis": "consent",
     "exportability": "allowed",
@@ -226,6 +226,13 @@ A `.ddna` envelope contains three components:
   }
 }
 ```
+
+The `edm_version` shown above is illustrative. ddna-reader is
+version-agnostic by design: it records and displays the envelope's
+`edm_version` but does not gate on it, so envelopes sealed under any
+historical EDM version remain inspectable and verifiable. The canonical
+current schema version is whatever the installed
+[`edm-spec`](https://www.npmjs.com/package/edm-spec) package declares.
 
 ## Architecture
 

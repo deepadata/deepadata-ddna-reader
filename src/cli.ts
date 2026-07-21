@@ -22,15 +22,15 @@ import { fileURLToPath } from 'node:url';
 import { inspect, inspectJson, validateStructure } from './lib/inspect.js';
 import { verify } from './lib/verify.js';
 
-// Get package version
+// Get package version — derived from package.json at runtime, never hardcoded
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-let version = '0.1.0';
+let version = 'unknown';
 try {
   const pkgPath = path.resolve(__dirname, '..', 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
   version = pkg.version;
 } catch {
-  // Use default version
+  // package.json unreadable — report 'unknown' rather than a stale literal
 }
 
 const program = new Command();
@@ -116,7 +116,7 @@ program
 
         console.log('');
         console.log(chalk.dim('Note: This validates structure only, not cryptographic signature.'));
-        console.log(chalk.dim('For signature verification, use ddna-tools.'));
+        console.log(chalk.dim('For signature verification, run: ddna-reader verify <file>'));
       } else {
         console.log(chalk.red('INVALID') + ' - Envelope structure has errors');
 

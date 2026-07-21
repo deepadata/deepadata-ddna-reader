@@ -58,6 +58,24 @@ const index: VectorIndex = JSON.parse(
   readFileSync(join(VECTORS_DIR, 'INDEX.json'), 'utf-8')
 );
 
+// Current spec version, derived from the installed edm-spec package (the
+// canonical source of truth per ADR-0030). Never hardcode this.
+const SPEC_PKG_VERSION: string = JSON.parse(
+  readFileSync(require.resolve('edm-spec/package.json'), 'utf-8')
+).version;
+
+const SEMVER_RE = /^\d+\.\d+\.\d+$/;
+
+/** Compare two x.y.z semver strings: negative if a < b, 0 if equal, positive if a > b */
+function semverCompare(a: string, b: string): number {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    if (pa[i] !== pb[i]) return pa[i] - pb[i];
+  }
+  return 0;
+}
+
 /**
  * Map implementation-specific error messages to canonical reason categories.
  * Per edm-spec test-vectors/README.md:
@@ -118,10 +136,32 @@ function matchesReasonCategory(reason: string | undefined, expectedCategory: str
 describe('Conformance Test Suite', () => {
   describe('Test vector metadata', () => {
     test('INDEX.json loads correctly', () => {
-      expect(index.version).toBe('1.0.0');
-      expect(index.spec_version).toBe('0.8.0');
-      expect(index.ddna_version).toBe('1.1');
-      expect(index.vectors).toHaveLength(10);
+      // Format assertions only — no hardcoded version literals. The vectors
+      // ship with the installed edm-spec package and may be stamped with a
+      // HISTORICAL spec version (a conforming reader accepts envelopes of
+      // multiple historical EDM versions; edm_version is recorded, not gated).
+      expect(index.version).toMatch(SEMVER_RE);
+      expect(index.spec_version).toMatch(SEMVER_RE);
+      expect(index.ddna_version).toBeTruthy();
+      expect(index.vectors.length).toBeGreaterThan(0);
+
+      // Historical acceptance, made explicit: the vectors' spec_version must
+      // not be NEWER than the installed spec package version (vectors from
+      // the future would mean the dependency pin is broken).
+      expect(
+        semverCompare(index.spec_version, SPEC_PKG_VERSION),
+        `test-vector spec_version ${index.spec_version} is newer than installed edm-spec ${SPEC_PKG_VERSION}`
+      ).toBeLessThanOrEqual(0);
+    });
+
+    test('installed edm-spec full-profile example stamps the current spec version', () => {
+      // Derivation lockstep check: the canonical example artifact in the
+      // installed spec package must carry meta.version === the spec package
+      // version. If this fails, the spec release cut is internally
+      // inconsistent — report upstream, do not patch here.
+      const examplePath = require.resolve('edm-spec/examples/example-full-profile.json');
+      const example = JSON.parse(readFileSync(examplePath, 'utf-8'));
+      expect(example.meta?.version).toBe(SPEC_PKG_VERSION);
     });
   });
 
